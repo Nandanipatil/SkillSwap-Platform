@@ -1,46 +1,88 @@
 const Skill = require('../models/Skill');
 
-// Get all skills
-exports.getSkills = async (req, res) => {
+// Get All Skills (For Home Page / Search & Filter)
+exports.getAllSkills = async (req, res) => {
     try {
-        const skills = await Skill.find().populate('user', 'name email');
-        res.status(200).json(skills);
+        const skills = await Skill.find()
+            .populate('user', 'name email')
+            .sort({ createdAt: -1 });
+        res.json(skills);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching skills:', error);
+        res.status(500).json({ message: 'Server error while fetching skills' });
     }
 };
 
-// Create a new skill
+// Create New Skill
 exports.createSkill = async (req, res) => {
     try {
         const { title, category, description } = req.body;
 
-        if (!title || !category) {
-            return res.status(400).json({ message: "Title and Category are required" });
+        if (!title || !category || !description) {
+            return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
-        const skill = await Skill.create({
-            user: req.user.id,
+        const newSkill = new Skill({
             title,
             category,
-            description
+            description,
+            user: req.user.id
         });
 
-        res.status(201).json(skill);
+        const savedSkill = await newSkill.save();
+        res.status(201).json(savedSkill);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error creating skill:', error);
+        res.status(500).json({ message: 'Server error while creating skill' });
     }
 };
 
-// Get single skill by ID
-exports.getSkillById = async (req, res) => {
+// Update Skill (Edit Skill)
+exports.updateSkill = async (req, res) => {
     try {
-        const skill = await Skill.findById(req.params.id).populate('user', 'name email');
+        const skill = await Skill.findById(req.params.id);
+
         if (!skill) {
             return res.status(404).json({ message: 'Skill not found' });
         }
-        res.status(200).json(skill);
+
+        // Verify Ownership: Check if the skill belongs to the logged-in user
+        if (skill.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Unauthorized action' });
+        }
+
+        const { title, category, description } = req.body;
+
+        skill.title = title || skill.title;
+        skill.category = category || skill.category;
+        skill.description = description || skill.description;
+
+        const updatedSkill = await skill.save();
+        res.json({ message: 'Skill updated successfully', skill: updatedSkill });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error updating skill:', error);
+        res.status(500).json({ message: 'Server error while updating skill' });
+    }
+};
+
+// Delete Skill
+exports.deleteSkill = async (req, res) => {
+    try {
+        const skill = await Skill.findById(req.params.id);
+
+        if (!skill) {
+            return res.status(404).json({ message: 'Skill not found' });
+        }
+
+        // Verify Ownership: Check if the skill belongs to the logged-in user
+        if (skill.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Unauthorized action' });
+        }
+
+        await skill.deleteOne();
+        res.json({ message: 'Skill deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting skill:', error);
+        res.status(500).json({ message: 'Server error while deleting skill' });
     }
 };

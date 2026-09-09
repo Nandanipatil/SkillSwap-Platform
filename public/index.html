@@ -4,21 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skill Swap Platform</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <header>
         <h1>Skill Swap Platform</h1>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="trades.html">My Trades</a>
-            <a href="login.html">Login</a>
+            <!-- Navigation dynamic app.js se load hogi -->
         </nav>
     </header>
 
     <main class="container">
-        <h2>Available Skills</h2>
+        <h2 class="section-title">Available Skills</h2>
+
+        <!-- Search and Filter Bar -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search skills by title or keyword..." 
+                style="flex: 2; min-width: 200px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;"
+            >
+            <select 
+                id="categoryFilter" 
+                style="flex: 1; min-width: 150px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;"
+            >
+                <option value="All">All Categories</option>
+                <option value="Programming">Programming</option>
+                <option value="Design">Design</option>
+                <option value="Language">Language</option>
+                <option value="Music">Music</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
         <div id="skillsContainer" class="skills-grid">
             <p>Loading skills...</p>
         </div>

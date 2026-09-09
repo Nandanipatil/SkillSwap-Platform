@@ -83,6 +83,10 @@ async function loadMySkills() {
                     <p><strong>Category:</strong> ${skill.category}</p>
                     <p><strong>Description:</strong> ${skill.description}</p>
                 </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button onclick="editSkill('${skill._id}', '${skill.title}', '${skill.category}', \`${skill.description}\`)" class="btn-action btn-accept" style="background-color: #f59e0b; border: none; padding: 6px 12px; border-radius: 4px; color: white; cursor: pointer;">Edit</button>
+                    <button onclick="deleteSkill('${skill._id}')" class="btn-action btn-reject" style="background-color: #ef4444; border: none; padding: 6px 12px; border-radius: 4px; color: white; cursor: pointer;">Delete</button>
+                </div>
             `;
             container.appendChild(card);
         });
@@ -90,6 +94,65 @@ async function loadMySkills() {
     } catch (err) {
         console.error("Error loading user skills:", err);
         container.innerHTML = '<p class="empty-state">Failed to load skills.</p>';
+    }
+}
+
+async function editSkill(skillId, currentTitle, currentCategory, currentDescription) {
+    const title = prompt("Update Skill Title:", currentTitle);
+    if (!title) return;
+
+    const category = prompt("Update Category (Programming, Design, Language, Music, Other):", currentCategory);
+    if (!category) return;
+
+    const description = prompt("Update Description:", currentDescription);
+    if (!description) return;
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/skills/${skillId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ title, category, description })
+        });
+
+        if (response.ok) {
+            alert("Skill updated successfully!");
+            loadMySkills();
+        } else {
+            const data = await response.json();
+            alert(`Error: ${data.message || 'Failed to update skill'}`);
+        }
+    } catch (err) {
+        console.error("Error updating skill:", err);
+    }
+}
+
+async function deleteSkill(skillId) {
+    if (!confirm("Are you sure you want to delete this skill?")) return;
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/skills/${skillId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            alert("Skill deleted successfully!");
+            loadMySkills();
+        } else {
+            const data = await response.json();
+            alert(`Error: ${data.message || 'Failed to delete skill'}`);
+        }
+    } catch (err) {
+        console.error("Error deleting skill:", err);
     }
 }
 
