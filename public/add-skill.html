@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Skill - SkillSwap</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Skill Swap Platform</h1>
+        <nav id="navMenu">
+            <a href="index.html">Home</a>
+            <a href="trades.html">My Trades</a>
+            <a href="add-skill.html">Add Skill</a>
+            <a href="#" onclick="logout(event)">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="auth-card" style="max-width: 600px; margin: 2rem auto;">
+            <h2>Add New Skill</h2>
+            <form id="addSkillForm">
+                <div class="form-group">
+                    <label for="title">Skill Title</label>
+                    <input type="text" id="title" placeholder="e.g. React.js Development" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;" required>
+                        <option value="">Select Category</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Design">Design</option>
+                        <option value="Language">Language</option>
+                        <option value="Music">Music</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="4" placeholder="Describe what you can teach or share..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">Post Skill</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/add-skill.js"></script>
+</body>
+</html>

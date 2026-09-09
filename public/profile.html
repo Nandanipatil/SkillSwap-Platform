@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - SkillSwap</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Skill Swap Platform</h1>
+        <nav id="navMenu">
+            <a href="index.html">Home</a>
+            <a href="trades.html">My Trades</a>
+            <a href="add-skill.html">Add Skill</a>
+            <a href="profile.html">Profile</a>
+            <a href="#" onclick="logout(event)">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">User Profile</h2>
+
+        <!-- User Info Card -->
+        <div class="auth-card" style="max-width: 600px; margin-bottom: 2.5rem;">
+            <h3 style="margin-bottom: 1rem; color: #007bff;">Account Details</h3>
+            <p style="margin-bottom: 0.5rem;"><strong>Name:</strong> <span id="userName">Loading...</span></p>
+            <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+        </div>
+
+        <!-- My Active Skills Section -->
+        <section class="trade-section">
+            <h3 class="subsection-title">My Listed Skills</h3>
+            <div id="mySkillsContainer" class="skills-grid">
+                <p>Loading your skills...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/profile.js"></script>
+</body>
+</html>

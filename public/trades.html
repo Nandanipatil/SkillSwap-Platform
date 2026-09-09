@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trades - SkillSwap</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Skill Swap Platform</h1>
+        <nav id="navMenu">
+            <a href="index.html">Home</a>
+            <a href="trades.html">My Trades</a>
+            <a href="#" onclick="logout(event)">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Trade Management Dashboard</h2>
+
+        <section class="trade-section">
+            <h3 class="subsection-title">Received Requests</h3>
+            <div id="receivedTradesContainer" class="skills-grid">
+                <p>Loading received requests...</p>
+            </div>
+        </section>
+
+        <section class="trade-section" style="margin-top: 3rem;">
+            <h3 class="subsection-title">Sent Requests</h3>
+            <div id="sentTradesContainer" class="skills-grid">
+                <p>Loading sent requests...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/trades.js"></script>
+</body>
+</html>
