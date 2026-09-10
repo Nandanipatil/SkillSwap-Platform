@@ -16,10 +16,7 @@ exports.getAllSkills = async (req, res) => {
 // Create New Skill
 exports.createSkill = async (req, res) => {
     try {
-        const { title, category, description } = req.body;
-
-        console.log("CREATE SKILL REQ BODY:", req.body);
-        console.log("CREATE SKILL REQ USER:", req.user);
+        const { title, category, description, type } = req.body;
 
         if (!title || !category || !description) {
             return res.status(400).json({ message: 'Please provide all required fields' });
@@ -31,10 +28,12 @@ exports.createSkill = async (req, res) => {
             return res.status(401).json({ message: 'User not authenticated' });
         }
 
+        // 'type' pass na ho toh default 'offered' assign karein
         const newSkill = new Skill({
             title,
             category,
             description,
+            type: type || 'offered', 
             user: userId
         });
 
@@ -61,11 +60,12 @@ exports.updateSkill = async (req, res) => {
             return res.status(403).json({ message: 'Unauthorized action' });
         }
 
-        const { title, category, description } = req.body;
+        const { title, category, description, type } = req.body;
 
         skill.title = title || skill.title;
         skill.category = category || skill.category;
         skill.description = description || skill.description;
+        skill.type = type || skill.type;
 
         const updatedSkill = await skill.save();
         res.json({ message: 'Skill updated successfully', skill: updatedSkill });

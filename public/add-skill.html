@@ -5,32 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Skill - SkillSwap</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-submit:hover {
+            background: #1d4ed8;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>Skill Swap Platform</h1>
-        <nav id="navMenu">
-            <a href="index.html">Home</a>
-            <a href="trades.html">My Trades</a>
-            <a href="add-skill.html">Add Skill</a>
-            <a href="#" onclick="logout(event)">Logout</a>
-        </nav>
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <a href="add-skill.html" class="btn-contact">Post Skill</a>
+        <a href="#">Categories</a>
+        <a href="#">About Us</a>
+        <a href="profile.html">My Account</a>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-nav">
+        <a href="index.html" class="brand-logo">
+            <i class="fa-solid fa-handshake"></i> SKILLSWAP
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="trades.html">My Trades</a></li>
+            <li><a href="add-skill.html">Add Skill</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(event)">Logout</a></li>
+        </ul>
     </header>
 
     <main class="container">
-        <div class="auth-card" style="max-width: 600px; margin: 2rem auto;">
-            <h2>Add New Skill</h2>
+        <div class="form-container">
+            <h1 style="color: #0f172a; margin-bottom: 8px; font-size: 1.8rem;">
+                <i class="fa-solid fa-square-plus" style="color: #2563eb;"></i> Add New Skill
+            </h1>
+            <p style="color: #64748b; margin-bottom: 25px; font-size: 0.95rem;">
+                Share your expertise with the community and discover new skills in return.
+            </p>
+
             <form id="addSkillForm">
                 <div class="form-group">
-                    <label for="title">Skill Title</label>
-                    <input type="text" id="title" placeholder="e.g. React.js Development" required>
+                    <label for="title"><i class="fa-solid fa-heading"></i> Skill Title</label>
+                    <input type="text" id="title" placeholder="e.g. React.js Development, Python Basics" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">Category</label>
-                    <select id="category" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;" required>
-                        <option value="">Select Category</option>
+                    <label for="category"><i class="fa-solid fa-list"></i> Category</label>
+                    <select id="category" required>
+                        <option value="" disabled selected>Select Category</option>
                         <option value="Programming">Programming</option>
                         <option value="Design">Design</option>
                         <option value="Language">Language</option>
@@ -40,11 +118,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="imageUrl"><i class="fa-solid fa-image"></i> Image URL (Optional)</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label for="description"><i class="fa-solid fa-align-left"></i> Description</label>
                     <textarea id="description" rows="4" placeholder="Describe what you can teach or share..." required></textarea>
                 </div>
 
-                <button type="submit" class="btn-primary">Post Skill</button>
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-paper-plane"></i> Post Skill
+                </button>
             </form>
         </div>
     </main>

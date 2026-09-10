@@ -3,57 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillSwap - Authentication</title>
+    <title>Account - SkillSwap</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 25px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+        .auth-tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-auth:hover { background: #1d4ed8; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>SkillSwap</h1>
-        <nav>
-            <a href="index.html">Home</a>
-        </nav>
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <a href="add-skill.html" class="btn-contact">Post Skill</a>
+        <a href="#">Categories</a>
+        <a href="#">About Us</a>
+        <a href="profile.html">My Account</a>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-nav">
+        <a href="index.html" class="brand-logo">
+            <i class="fa-solid fa-handshake"></i> SKILLSWAP
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html">Login / Register</a></li>
+        </ul>
     </header>
 
-    <main class="auth-wrapper">
-        <!-- Login Card -->
-        <div class="auth-card">
-            <h2>Login</h2>
+    <main class="container">
+        <div class="auth-container">
+            
+            <!-- Switch Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </div>
+                <div class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">
+                    <i class="fa-solid fa-user-plus"></i> Register
+                </div>
+            </div>
+
+            <!-- Login Form -->
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                    <label for="loginEmail"><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="name@example.com" required>
                 </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="btn-primary">Login</button>
-            </form>
-        </div>
 
-        <!-- Register Card -->
-        <div class="auth-card">
-            <h2>Register</h2>
-            <form id="registerForm">
                 <div class="form-group">
-                    <label for="regName">Full Name</label>
-                    <input type="text" id="regName" placeholder="Enter your full name" required>
+                    <label for="loginPassword"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required>
                 </div>
+
+                <button type="submit" class="btn-auth">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="hidden">
                 <div class="form-group">
-                    <label for="regEmail">Email Address</label>
-                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                    <label for="regName"><i class="fa-solid fa-user"></i> Full Name</label>
+                    <input type="text" id="regName" placeholder="John Doe" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="regPassword">Password</label>
+                    <label for="regEmail"><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <input type="email" id="regEmail" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword"><i class="fa-solid fa-lock"></i> Password</label>
                     <input type="password" id="regPassword" placeholder="Create password" required>
                 </div>
-                <div class="form-group">
-                    <label for="regBio">Short Bio</label>
-                    <textarea id="regBio" rows="3" placeholder="Tell us about your skills..."></textarea>
-                </div>
-                <button type="submit" class="btn-primary btn-success">Register Account</button>
+
+                <button type="submit" class="btn-auth">
+                    <i class="fa-solid fa-user-check"></i> Create Account
+                </button>
             </form>
+
         </div>
     </main>
 

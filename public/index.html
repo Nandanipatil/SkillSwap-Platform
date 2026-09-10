@@ -3,33 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill Swap Platform</title>
+    <title>SkillSwap Platform</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <h1>Skill Swap Platform</h1>
-        <nav>
-            <!-- Navigation dynamic app.js se load hogi -->
-        </nav>
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <a href="add-skill.html" class="btn-contact">Post Skill</a>
+        <a href="#">Categories</a>
+        <a href="#">About Us</a>
+        <a href="profile.html">My Account</a>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-nav">
+        <a href="index.html" class="brand-logo">
+            <i class="fa-solid fa-handshake"></i> SKILLSWAP
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="trades.html">My Trades</a></li>
+            <li><a href="add-skill.html">Add Skill</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(event)">Logout</a></li>
+        </ul>
     </header>
 
-    <main class="container">
-        <h2 class="section-title">Available Skills</h2>
+    <!-- Hero Title Banner -->
+    <section class="hero-banner">
+        <h1>SKILL SWAP PLATFORM: LEARN AND SHARE SKILLS FREELY</h1>
 
+        <!-- Announcement Alert Box -->
+        <div class="announcement-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #facc15;"><i class="fa-solid fa-circle-exclamation"></i> Platform Maintenance Notice</strong>
+                <span style="cursor: pointer; color: #94a3b8;" onclick="this.parentElement.parentElement.style.display='none'">✕</span>
+            </div>
+            <p>Our platform database undergoes routine maintenance every Sunday between 12:00 AM - 02:00 AM. Thank you for your patience while we keep our services world-class!</p>
+            <span class="announcement-tag">System Updates</span>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="container" style="padding: 40px 5%;">
         <!-- Search and Filter Bar -->
         <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-            <input 
-                type="text" 
-                id="searchInput" 
-                placeholder="Search skills by title or keyword..." 
-                style="flex: 2; min-width: 200px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;"
-            >
-            <select 
-                id="categoryFilter" 
-                style="flex: 1; min-width: 150px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem;"
-            >
+            <input type="text" id="searchInput" placeholder="Search skills by title or keyword..." style="flex: 2; min-width: 200px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+            <select id="categoryFilter" style="flex: 1; min-width: 150px; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 6px;">
                 <option value="All">All Categories</option>
                 <option value="Programming">Programming</option>
                 <option value="Design">Design</option>
@@ -39,7 +61,7 @@
             </select>
         </div>
 
-        <div id="skillsContainer" class="skills-grid">
+        <div id="skillsContainer" class="skills-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
             <p>Loading skills...</p>
         </div>
     </main>

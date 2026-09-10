@@ -1,3 +1,4 @@
+/* Base Resets */
 * {
     margin: 0;
     padding: 0;
@@ -5,237 +6,118 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background-color: #f8fafc;
-    color: #1e293b;
+/* Top Utility Bar */
+.top-bar {
+    background-color: #111827;
+    padding: 8px 5%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
 }
 
-header {
-    background-color: #007bff;
-    color: white;
-    padding: 1.2rem 2rem;
+.top-bar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.top-bar a:hover {
+    color: #ffffff;
+}
+
+.btn-contact {
+    background-color: #0d9488;
+    color: white !important;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Main Navigation Bar */
+.main-nav {
+    background-color: #1e293b;
+    padding: 15px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #334155;
 }
 
-header h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: 600;
-    transition: opacity 0.2s ease;
-}
-
-nav a:hover {
-    opacity: 0.8;
-}
-
-.container {
-    max-width: 1100px;
-    margin: 2.5rem auto;
-    padding: 0 1.5rem;
-}
-
-.container h2, .section-title {
-    margin-bottom: 1.8rem;
-    color: #0f172a;
-    font-size: 1.75rem;
-    font-weight: 700;
-}
-
-.subsection-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #334155;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 0.4rem;
-}
-
-/* Skills Grid Layout */
-.skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Skill Card Styling */
-.skill-card {
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+.brand-logo {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.skill-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.skill-card h3 {
-    color: #007bff;
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
-}
-
-.skill-card p {
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    color: #475569;
-}
-
-.skill-card small {
-    color: #64748b;
-    margin-top: 0.4rem;
-    display: block;
-}
-
-.btn-swap {
-    margin-top: 1.2rem;
-    background-color: #10b981;
-    color: white;
-    border: none;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    width: 100%;
-    transition: background-color 0.2s ease;
-}
-
-.btn-swap:hover {
-    background-color: #059669;
-}
-
-/* Status Badges */
-.badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: capitalize;
-    display: inline-block;
-}
-
-.badge-pending {
-    background-color: #fef3c7;
-    color: #d97706;
-}
-
-.badge-accepted {
-    background-color: #d1fae5;
-    color: #059669;
-}
-
-.badge-rejected {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
-/* Action Buttons */
-.action-buttons {
-    display: flex;
+    align-items: center;
     gap: 10px;
-    margin-top: 15px;
-}
-
-.btn-action {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.1s ease;
-}
-
-.btn-action:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.btn-accept {
-    background-color: #10b981;
     color: white;
-}
-
-.btn-reject {
-    background-color: #ef4444;
-    color: white;
-}
-
-/* Auth Cards */
-.auth-wrapper {
-    max-width: 1000px;
-    margin: 3rem auto;
-    padding: 0 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2.5rem;
-    align-items: start;
-}
-
-.auth-card {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
-}
-
-.auth-card h2 {
     font-size: 1.5rem;
-    color: #1e293b;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #007bff;
-    display: inline-block;
-    padding-bottom: 0.3rem;
+    font-weight: 800;
+    text-decoration: none;
 }
 
-.form-group {
-    margin-bottom: 1.2rem;
+.nav-links {
     display: flex;
-    flex-direction: column;
+    list-style: none;
+    gap: 20px;
 }
 
-.form-group label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 0.4rem;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    outline: none;
-}
-
-.btn-primary {
-    width: 100%;
-    background-color: #007bff;
+.nav-links a {
     color: #ffffff;
-    border: none;
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    font-weight: 600;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-links a:hover {
+    color: #38bdf8;
+}
+
+/* Hero Title Banner */
+.hero-banner {
+    background-color: #475569;
+    color: white;
+    text-align: center;
+    padding: 60px 10%;
+}
+
+.hero-banner h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+/* Announcement Alert Box */
+.announcement-box {
+    background-color: #1e293b;
+    border-left: 5px solid #eab308;
+    padding: 20px;
     border-radius: 6px;
-    cursor: pointer;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+}
+
+.announcement-box p {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+    margin-top: 5px;
+}
+
+.announcement-tag {
+    display: inline-block;
+    background-color: #0284c7;
+    color: white;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    margin-top: 15px;
+    font-weight: 600;
 }

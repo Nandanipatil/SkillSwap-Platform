@@ -5,34 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Trades - SkillSwap</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-card h4 { margin: 0; font-size: 0.85rem; color: #64748b; text-transform: uppercase; }
+        .stat-card span { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .trade-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>Skill Swap Platform</h1>
-        <nav id="navMenu">
-            <a href="index.html">Home</a>
-            <a href="trades.html">My Trades</a>
-            <a href="#" onclick="logout(event)">Logout</a>
-        </nav>
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <a href="add-skill.html" class="btn-contact">Post Skill</a>
+        <a href="#">Categories</a>
+        <a href="#">About Us</a>
+        <a href="profile.html">My Account</a>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-nav">
+        <a href="index.html" class="brand-logo">
+            <i class="fa-solid fa-handshake"></i> SKILLSWAP
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="trades.html">My Trades</a></li>
+            <li><a href="add-skill.html">Add Skill</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(event)">Logout</a></li>
+        </ul>
     </header>
 
-    <main class="container">
-        <h2 class="section-title">Trade Management Dashboard</h2>
+    <main class="container" style="padding: 40px 8%; max-width: 1200px; margin: 0 auto;">
+        
+        <h1 style="color: #0f172a; margin-bottom: 1.5rem;">
+            <i class="fa-solid fa-chart-line" style="color: #2563eb;"></i> Trade Overview
+        </h1>
 
-        <section class="trade-section">
-            <h3 class="subsection-title">Received Requests</h3>
-            <div id="receivedTradesContainer" class="skills-grid">
+        <!-- Stats Overview Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>
+                    <h4>Total Trades</h4>
+                    <span id="statTotal">0</span>
+                </div>
+                <i class="fa-solid fa-arrows-rotate" style="font-size: 2rem; color: #3b82f6;"></i>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h4>Pending</h4>
+                    <span id="statPending">0</span>
+                </div>
+                <i class="fa-solid fa-clock" style="font-size: 2rem; color: #f59e0b;"></i>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h4>Accepted</h4>
+                    <span id="statAccepted">0</span>
+                </div>
+                <i class="fa-solid fa-circle-check" style="font-size: 2rem; color: #10b981;"></i>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h4>Rejected</h4>
+                    <span id="statRejected">0</span>
+                </div>
+                <i class="fa-solid fa-circle-xmark" style="font-size: 2rem; color: #ef4444;"></i>
+            </div>
+        </div>
+
+        <!-- Section Navigation Tabs -->
+        <div class="trade-tabs">
+            <button class="tab-btn active" onclick="switchTab('received')">
+                <i class="fa-solid fa-inbox"></i> Received Requests
+            </button>
+            <button class="tab-btn" onclick="switchTab('sent')">
+                <i class="fa-solid fa-paper-plane"></i> Sent Requests
+            </button>
+        </div>
+
+        <!-- Received Requests Container -->
+        <div id="receivedSection">
+            <div id="receivedRequests" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
                 <p>Loading received requests...</p>
             </div>
-        </section>
+        </div>
 
-        <section class="trade-section" style="margin-top: 3rem;">
-            <h3 class="subsection-title">Sent Requests</h3>
-            <div id="sentTradesContainer" class="skills-grid">
+        <!-- Sent Requests Container -->
+        <div id="sentSection" style="display: none;">
+            <div id="sentRequests" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
                 <p>Loading sent requests...</p>
             </div>
-        </section>
+        </div>
+
     </main>
 
     <script src="js/trades.js"></script>

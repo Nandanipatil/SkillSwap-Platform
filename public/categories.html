@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - SkillSwap</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .category-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: #2563eb;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.15);
+        }
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 16px;
+            transition: all 0.25s ease;
+        }
+        .category-card:hover .category-icon {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .category-card h3 {
+            margin: 0 0 8px 0;
+            color: #0f172a;
+            font-size: 1.2rem;
+        }
+        .category-card p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <a href="add-skill.html" class="btn-contact">Post Skill</a>
+        <a href="categories.html">Categories</a>
+        <a href="#">About Us</a>
+        <a href="profile.html">My Account</a>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="main-nav">
+        <a href="index.html" class="brand-logo">
+            <i class="fa-solid fa-handshake"></i> SKILLSWAP
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html" class="active">Categories</a></li>
+            <li><a href="trades.html">My Trades</a></li>
+            <li><a href="add-skill.html">Add Skill</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(event)">Logout</a></li>
+        </ul>
+    </header>
+
+    <main class="container" style="padding: 40px 8%; max-width: 1200px; margin: 0 auto;">
+
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: #0f172a; margin-bottom: 8px;">
+                <i class="fa-solid fa-shapes" style="color: #2563eb;"></i> Explore Categories
+            </h1>
+            <p style="color: #64748b; font-size: 1rem;">Browse skill offerings by domain and start swapping</p>
+        </div>
+
+        <div class="category-grid">
+            <div class="category-card" onclick="selectCategory('Programming')">
+                <div class="category-icon"><i class="fa-solid fa-code"></i></div>
+                <h3>Programming</h3>
+                <p>Web, Python, C++, Mobile Apps</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Design')">
+                <div class="category-icon"><i class="fa-solid fa-pen-nib"></i></div>
+                <h3>Design</h3>
+                <p>UI/UX, Graphic Design, 3D Art</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Language')">
+                <div class="category-icon"><i class="fa-solid fa-language"></i></div>
+                <h3>Language</h3>
+                <p>English, Spanish, Foreign Languages</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Music')">
+                <div class="category-icon"><i class="fa-solid fa-music"></i></div>
+                <h3>Music</h3>
+                <p>Guitar, Piano, Vocal Training</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Other')">
+                <div class="category-icon"><i class="fa-solid fa-cubes"></i></div>
+                <h3>Other Skills</h3>
+                <p>Business, Marketing, Crafts & More</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function checkUserAuth() {
+            const token = localStorage.getItem('token');
+            const navLinks = document.getElementById('navLinks');
+
+            if (!navLinks) return;
+
+            if (!token) {
+                navLinks.innerHTML = `
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="categories.html" class="active">Categories</a></li>
+                    <li><a href="login.html">Login / Register</a></li>
+                `;
+            }
+        }
+
+        function selectCategory(catName) {
+            // Redirect to home page with category query parameter
+            window.location.href = `index.html?category=${encodeURIComponent(catName)}`;
+        }
+
+        function logout(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', checkUserAuth);
+    </script>
+</body>
+</html>

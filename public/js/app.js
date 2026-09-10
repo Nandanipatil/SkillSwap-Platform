@@ -1,52 +1,55 @@
 const API_URL = 'http://localhost:5000/api';
 
-// Local cache for skills to enable instant search & filtering
+// Local cache for skills
 let allSkills = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     checkUserAuth();
-    loadSkills();
+    
+    // URL se category parameter handle karna (Categories Page URL link ke liye)
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
 
-    // Event listeners for real-time search & filter
     const searchInput = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
 
-    if (searchInput) {
-        searchInput.addEventListener('input', filterAndRenderSkills);
+    if (categoryParam && categoryFilter) {
+        categoryFilter.value = categoryParam;
     }
-    if (categoryFilter) {
-        categoryFilter.addEventListener('change', filterAndRenderSkills);
-    }
+
+    if (searchInput) searchInput.addEventListener('input', filterAndRenderSkills);
+    if (categoryFilter) categoryFilter.addEventListener('change', filterAndRenderSkills);
+
+    loadSkills();
 });
 
-// Check auth status and render header nav
+// Check Auth status
 function checkUserAuth() {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const navElement = document.querySelector('nav');
+    const navLinks = document.getElementById('navLinks');
 
-    if (!navElement) return;
+    if (!navLinks) return;
 
     if (token && user && user.name) {
-        navElement.innerHTML = `
-            <span style="color: white; font-weight: 600; margin-right: 15px;">
-                Welcome, ${user.name}
-            </span>
-            <a href="index.html">Home</a>
-            <a href="trades.html">My Trades</a>
-            <a href="add-skill.html">Add Skill</a>
-            <a href="profile.html">Profile</a>
-            <a href="#" onclick="logout(event)">Logout</a>
+        navLinks.innerHTML = `
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="trades.html">My Trades</a></li>
+            <li><a href="add-skill.html">Add Skill</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(event)">Logout</a></li>
         `;
     } else {
-        navElement.innerHTML = `
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
+        navLinks.innerHTML = `
+            <li><a href="index.html">Home</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="login.html">Login / Register</a></li>
         `;
     }
 }
 
-// Logout
+// Logout function
 function logout(event) {
     if (event) event.preventDefault();
     localStorage.removeItem('token');
@@ -54,7 +57,7 @@ function logout(event) {
     window.location.reload();
 }
 
-// Fetch all skills from backend
+// Load Skills from Backend
 async function loadSkills() {
     const skillsContainer = document.getElementById('skillsContainer');
     if (!skillsContainer) return;
@@ -64,19 +67,52 @@ async function loadSkills() {
         const skills = await response.json();
 
         if (!Array.isArray(skills)) {
-            skillsContainer.innerHTML = '<p>Failed to load skills list.</p>';
+            skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b;">Failed to load skills list.</p>';
             return;
         }
 
-        allSkills = skills; // Store fetched skills locally
-        filterAndRenderSkills(); // Render initial list
+        allSkills = skills;
+        filterAndRenderSkills();
     } catch (error) {
         console.error('Error loading skills:', error);
-        skillsContainer.innerHTML = '<p>Failed to load skills. Please check backend connection.</p>';
+        skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ef4444;">Failed to load skills. Please check backend connection.</p>';
     }
 }
 
-// Filter skills by Title/Keyword and Category
+// Topic-Specific Image Resolver
+function getSkillImage(title, category, imageUrl) {
+    if (imageUrl && imageUrl.trim() !== '') return imageUrl;
+
+    const lowerTitle = (title || '').toLowerCase();
+
+    if (lowerTitle.includes('html') || lowerTitle.includes('css') || lowerTitle.includes('web')) {
+        return 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500';
+    }
+    if (lowerTitle.includes('python')) {
+        return 'https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?w=500';
+    }
+    if (lowerTitle.includes('sql') || lowerTitle.includes('database')) {
+        return 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=500';
+    }
+    if (lowerTitle.includes('c ') || lowerTitle.includes('c++') || lowerTitle.includes('java') || lowerTitle.includes('c language')) {
+        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500';
+    }
+    if (lowerTitle.includes('react') || lowerTitle.includes('node') || lowerTitle.includes('mern')) {
+        return 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500';
+    }
+
+    const categoryImages = {
+        'Programming': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500',
+        'Design': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500',
+        'Language': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=500',
+        'Music': 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500',
+        'Other': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500'
+    };
+
+    return categoryImages[category] || categoryImages['Other'];
+}
+
+// Filter and Render Skills
 function filterAndRenderSkills() {
     const skillsContainer = document.getElementById('skillsContainer');
     if (!skillsContainer) return;
@@ -84,13 +120,10 @@ function filterAndRenderSkills() {
     const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
     const selectedCategory = document.getElementById('categoryFilter')?.value || 'All';
 
-    // Apply Filter Criteria
     const filteredSkills = allSkills.filter(skill => {
         const titleMatch = (skill.title || '').toLowerCase().includes(searchTerm) || 
                            (skill.description || '').toLowerCase().includes(searchTerm);
-        
         const categoryMatch = selectedCategory === 'All' || skill.category === selectedCategory;
-
         return titleMatch && categoryMatch;
     });
 
@@ -101,29 +134,35 @@ function filterAndRenderSkills() {
         return;
     }
 
-    // Render Filtered Skills
     filteredSkills.forEach(skill => {
         const skillCard = document.createElement('div');
         skillCard.className = 'skill-card';
-        
+        skillCard.style.cssText = 'border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: space-between;';
+
         const ownerName = skill.user ? (skill.user.name || 'User') : 'Anonymous';
         const skillId = skill._id;
+        const cardImage = getSkillImage(skill.title, skill.category, skill.imageUrl);
 
         skillCard.innerHTML = `
             <div>
-                <h3>${skill.title || 'Untitled Skill'}</h3>
-                <p><strong>Category:</strong> ${skill.category || 'General'}</p>
-                <p><strong>Description:</strong> ${skill.description || 'No description provided.'}</p>
-                <small>Offered by: ${ownerName}</small>
+                <img src="${cardImage}" alt="${skill.title}" style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #e2e8f0;">
+                <div style="padding: 1rem;">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 1.15rem;">${skill.title || 'Untitled Skill'}</h3>
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #2563eb; font-weight: 600;">Category: ${skill.category || 'General'}</p>
+                    <p style="margin: 0 0 1rem 0; font-size: 0.95rem; color: #475569; line-height: 1.4;">${skill.description || 'No description provided.'}</p>
+                    <small style="color: #64748b;">Offered by: <strong>${ownerName}</strong></small>
+                </div>
             </div>
-            <button onclick="requestSwap('${skillId}')" class="btn-swap">Request Swap</button>
+            <div style="padding: 1rem; padding-top: 0;">
+                <button onclick="requestSwap('${skillId}')" class="btn-swap" style="width: 100%; padding: 0.6rem; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Request Swap</button>
+            </div>
         `;
 
         skillsContainer.appendChild(skillCard);
     });
 }
 
-// Request Swap
+// Request Swap Function
 async function requestSwap(skillId) {
     const token = localStorage.getItem('token');
 
@@ -143,10 +182,7 @@ async function requestSwap(skillId) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({
-                skillId: skillId,
-                message: message
-            })
+            body: JSON.stringify({ skillId, message })
         });
 
         const data = await response.json();
