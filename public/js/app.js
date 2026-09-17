@@ -92,32 +92,26 @@ function getSkillImage(title, category, imageUrl) {
     const lowerTitle = (title || '').toLowerCase();
     const lowerCategory = (category || '').toLowerCase();
 
-    // 1. Python / Machine Learning / Data
     if (lowerTitle.includes('python')) {
         return 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop';
     }
 
-    // 2. C Language / Java / C++ / System Programming
     if (lowerTitle.includes('c ') || lowerTitle.includes('c++') || lowerTitle.includes('java') || lowerTitle.includes('c language')) {
         return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop';
     }
 
-    // 3. Database / SQL / Backend
     if (lowerTitle.includes('sql') || lowerTitle.includes('database') || lowerTitle.includes('mongo')) {
         return 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&auto=format&fit=crop';
     }
 
-    // 4. Web Development / React / Frontend
     if (lowerTitle.includes('html') || lowerTitle.includes('css') || lowerTitle.includes('web') || lowerTitle.includes('react') || lowerTitle.includes('node')) {
         return 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&auto=format&fit=crop';
     }
 
-    // 5. UI/UX Design / Figma / Wireframes
     if (lowerTitle.includes('ui') || lowerTitle.includes('ux') || lowerTitle.includes('design') || lowerCategory.includes('design')) {
         return 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=600&auto=format&fit=crop';
     }
 
-    // Category Fallbacks with Tech Focus
     const categoryImages = {
         'Programming': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop',
         'Design': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop',
@@ -163,7 +157,6 @@ function filterAndRenderSkills() {
         const skillId = skill._id;
         const cardImage = getSkillImage(skill.title, skill.category, skill.imageUrl);
 
-        // Calculated Match Score Badge (Displays on each card)
         const matchScores = [95, 88, 92, 85, 90];
         const displayScore = skill.matchScore || matchScores[index % matchScores.length];
 
@@ -192,7 +185,7 @@ function filterAndRenderSkills() {
     });
 }
 
-// Request Swap Function
+// Request Swap Function with Expiry Handling
 async function requestSwap(skillId) {
     const token = localStorage.getItem('token');
 
@@ -212,7 +205,7 @@ async function requestSwap(skillId) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-              body: JSON.stringify({ skillId, message })
+            body: JSON.stringify({ skillId, message })
         });
 
         const data = await response.json();
@@ -220,10 +213,72 @@ async function requestSwap(skillId) {
         if (response.ok) {
             alert("Trade request sent successfully!");
         } else {
-            alert(`Error: ${data.message || 'Failed to send request'}`);
+            if (data.message && (data.message.includes('Token') || response.status === 401)) {
+                alert("Your session has expired. Please login again!");
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            } else {
+                alert(`Error: ${data.message || 'Failed to send request'}`);
+            }
         }
     } catch (error) {
         console.error("Request Failed:", error);
         alert("Failed to send trade request. Check console for details.");
     }
+}
+
+/* --- Floating AI Chatbot Handlers --- */
+function toggleChat() {
+    const chatWin = document.getElementById('chat-window');
+    if (chatWin) {
+        chatWin.classList.toggle('hidden');
+    }
+}
+
+function handleChatKey(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const messages = document.getElementById('chatMessages');
+    if (!input || !messages) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Render User Message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'user-msg';
+    userDiv.innerText = text;
+    messages.appendChild(userDiv);
+    input.value = '';
+
+    messages.scrollTop = messages.scrollHeight;
+
+    // AI Dynamic Smart Assistant Logic
+    const botDiv = document.createElement('div');
+    botDiv.className = 'bot-msg';
+
+    const lowerText = text.toLowerCase();
+    
+    if (lowerText.includes('python')) {
+        botDiv.innerText = "Python seekhne ke liye Home page par Nandani Patil ka 'Python' card check karein aur Swap click karke request bhejein!";
+    } else if (lowerText.includes('sql') || lowerText.includes('database')) {
+        botDiv.innerText = "SQL database management skills available hain. Aap 'Categories' me 'Programming' section filter kar sakti hain.";
+    } else if (lowerText.includes('swap') || lowerText.includes('trade')) {
+        botDiv.innerText = "Skill Swap karne ke liye: 1) Home page par skill choose karein 2) 'Swap' button click karein 3) Note likhkar Send karein. Unke accept karte hi roadmap generate ho jayega!";
+    } else if (lowerText.includes('hi') || lowerText.includes('hello') || lowerText.includes('hey')) {
+        botDiv.innerText = "Hello! Main SkillSwap AI Bot hu. Aaj aap kaunsi new skill learn ya teach karna chahte hain?";
+    } else {
+        botDiv.innerText = `SkillSwap AI: Maine aapka query samjha ("${text}"). Aap homepage search bar me keyword search karke related skills find kar sakti hain!`;
+    }
+
+    setTimeout(() => {
+        messages.appendChild(botDiv);
+        messages.scrollTop = messages.scrollHeight;
+    }, 400);
 }
