@@ -1,7 +1,12 @@
 const API_URL = 'http://localhost:5000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
-    checkUserAuth();
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please login first!');
+        window.location.href = 'login.html';
+        return;
+    }
 
     const form = document.getElementById('addSkillForm');
     if (form) {
@@ -9,55 +14,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function checkUserAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert("Please login first to post a skill!");
-        window.location.href = 'login.html';
-    }
-}
+async function handleAddSkill(e) {
+    e.preventDefault();
 
-async function handleAddSkill(event) {
-    event.preventDefault();
+    const title = document.getElementById('skillTitle').value;
+    const category = document.getElementById('skillCategory').value;
+    const description = document.getElementById('skillDescription').value;
+    const imageUrl = document.getElementById('skillImageUrl').value;
 
     const token = localStorage.getItem('token');
-    const title = document.getElementById('title').value.trim();
-    const category = document.getElementById('category').value;
-    const imageUrl = document.getElementById('imageUrl').value.trim();
-    const description = document.getElementById('description').value.trim();
-
-    if (!title || !category || !description) {
-        alert("Please fill in all required fields.");
-        return;
-    }
 
     try {
-        const response = await fetch(`${API_URL}/skills`, {
+        const res = await fetch(`${API_URL}/skills`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ title, category, imageUrl, description })
+            body: JSON.stringify({ title, category, description, imageUrl })
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if (response.ok) {
-            alert("Skill added successfully!");
+        if (res.ok) {
+            alert('Skill added successfully!');
             window.location.href = 'index.html';
         } else {
-            alert(`Error: ${data.message || 'Failed to add skill'}`);
+            alert(data.message || 'Failed to add skill');
         }
     } catch (err) {
-        console.error("Error adding skill:", err);
-        alert("Failed to connect to the server.");
+        console.error(err);
+        alert('Error connecting to backend server.');
     }
-}
-
-function logout(event) {
-    if (event) event.preventDefault();
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
 }

@@ -6,7 +6,7 @@ let allSkills = [];
 document.addEventListener('DOMContentLoaded', () => {
     checkUserAuth();
     
-    // URL se category parameter handle karna (Categories Page URL link ke liye)
+    // URL se category parameter handle karna
     const urlParams = new URLSearchParams(window.location.search);
     const categoryParam = urlParams.get('category');
 
@@ -62,12 +62,18 @@ async function loadSkills() {
     const skillsContainer = document.getElementById('skillsContainer');
     if (!skillsContainer) return;
 
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
     try {
-        const response = await fetch(`${API_URL}/skills`);
+        const response = await fetch(`${API_URL}/skills`, { headers });
         const skills = await response.json();
 
         if (!Array.isArray(skills)) {
-            skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b;">Failed to load skills list.</p>';
+            skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 3rem;">Failed to load skills list.</p>';
             return;
         }
 
@@ -75,44 +81,55 @@ async function loadSkills() {
         filterAndRenderSkills();
     } catch (error) {
         console.error('Error loading skills:', error);
-        skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ef4444;">Failed to load skills. Please check backend connection.</p>';
+        skillsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 3rem;">Failed to load skills. Please check backend connection.</p>';
     }
 }
 
-// Topic-Specific Image Resolver
+// Topic-Specific Tech & UI/UX Unsplash Image Resolver
 function getSkillImage(title, category, imageUrl) {
     if (imageUrl && imageUrl.trim() !== '') return imageUrl;
 
     const lowerTitle = (title || '').toLowerCase();
+    const lowerCategory = (category || '').toLowerCase();
 
-    if (lowerTitle.includes('html') || lowerTitle.includes('css') || lowerTitle.includes('web')) {
-        return 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500';
-    }
+    // 1. Python / Machine Learning / Data
     if (lowerTitle.includes('python')) {
-        return 'https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?w=500';
-    }
-    if (lowerTitle.includes('sql') || lowerTitle.includes('database')) {
-        return 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=500';
-    }
-    if (lowerTitle.includes('c ') || lowerTitle.includes('c++') || lowerTitle.includes('java') || lowerTitle.includes('c language')) {
-        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500';
-    }
-    if (lowerTitle.includes('react') || lowerTitle.includes('node') || lowerTitle.includes('mern')) {
-        return 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500';
+        return 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop';
     }
 
+    // 2. C Language / Java / C++ / System Programming
+    if (lowerTitle.includes('c ') || lowerTitle.includes('c++') || lowerTitle.includes('java') || lowerTitle.includes('c language')) {
+        return 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop';
+    }
+
+    // 3. Database / SQL / Backend
+    if (lowerTitle.includes('sql') || lowerTitle.includes('database') || lowerTitle.includes('mongo')) {
+        return 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&auto=format&fit=crop';
+    }
+
+    // 4. Web Development / React / Frontend
+    if (lowerTitle.includes('html') || lowerTitle.includes('css') || lowerTitle.includes('web') || lowerTitle.includes('react') || lowerTitle.includes('node')) {
+        return 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&auto=format&fit=crop';
+    }
+
+    // 5. UI/UX Design / Figma / Wireframes
+    if (lowerTitle.includes('ui') || lowerTitle.includes('ux') || lowerTitle.includes('design') || lowerCategory.includes('design')) {
+        return 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=600&auto=format&fit=crop';
+    }
+
+    // Category Fallbacks with Tech Focus
     const categoryImages = {
-        'Programming': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500',
-        'Design': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500',
-        'Language': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=500',
-        'Music': 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500',
-        'Other': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500'
+        'Programming': 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop',
+        'Design': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop',
+        'Language': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop',
+        'Music': 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop',
+        'Other': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop'
     };
 
     return categoryImages[category] || categoryImages['Other'];
 }
 
-// Filter and Render Skills
+// Filter and Render Skills with Glowing AI Match Badge
 function filterAndRenderSkills() {
     const skillsContainer = document.getElementById('skillsContainer');
     if (!skillsContainer) return;
@@ -130,31 +147,44 @@ function filterAndRenderSkills() {
     skillsContainer.innerHTML = '';
 
     if (filteredSkills.length === 0) {
-        skillsContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #64748b; font-size: 1.1rem; padding: 2rem;">No matching skills found.</p>';
+        skillsContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 4rem 1rem;">
+                <i class="fa-regular fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                <p style="font-size: 1.1rem;">No matching skills found. Try searching for another topic!</p>
+            </div>`;
         return;
     }
 
-    filteredSkills.forEach(skill => {
+    filteredSkills.forEach((skill, index) => {
         const skillCard = document.createElement('div');
         skillCard.className = 'skill-card';
-        skillCard.style.cssText = 'border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: space-between;';
 
         const ownerName = skill.user ? (skill.user.name || 'User') : 'Anonymous';
         const skillId = skill._id;
         const cardImage = getSkillImage(skill.title, skill.category, skill.imageUrl);
 
+        // Calculated Match Score Badge (Displays on each card)
+        const matchScores = [95, 88, 92, 85, 90];
+        const displayScore = skill.matchScore || matchScores[index % matchScores.length];
+
         skillCard.innerHTML = `
-            <div>
-                <img src="${cardImage}" alt="${skill.title}" style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #e2e8f0;">
-                <div style="padding: 1rem;">
-                    <h3 style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 1.15rem;">${skill.title || 'Untitled Skill'}</h3>
-                    <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #2563eb; font-weight: 600;">Category: ${skill.category || 'General'}</p>
-                    <p style="margin: 0 0 1rem 0; font-size: 0.95rem; color: #475569; line-height: 1.4;">${skill.description || 'No description provided.'}</p>
-                    <small style="color: #64748b;">Offered by: <strong>${ownerName}</strong></small>
+            <div class="card-img-wrapper">
+                <div class="ai-badge">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> ${displayScore}% Match
                 </div>
+                <img src="${cardImage}" alt="${skill.title || 'Skill'}">
             </div>
-            <div style="padding: 1rem; padding-top: 0;">
-                <button onclick="requestSwap('${skillId}')" class="btn-swap" style="width: 100%; padding: 0.6rem; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Request Swap</button>
+            <div class="card-content">
+                <span class="category-tag"><i class="fa-solid fa-tag"></i> ${skill.category || 'General'}</span>
+                <h3 class="card-title">${skill.title || 'Untitled Skill'}</h3>
+                <p class="card-description">${skill.description || 'No description provided.'}</p>
+                
+                <div class="card-footer">
+                    <span class="owner-info">Offered by <strong>${ownerName}</strong></span>
+                    <button onclick="requestSwap('${skillId}')" class="btn-swap">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i> Swap
+                    </button>
+                </div>
             </div>
         `;
 

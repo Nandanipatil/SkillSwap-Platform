@@ -3,138 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - SkillSwap</title>
+    <title>My Profile - SkillSwap</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .profile-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #2563eb;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
-        .profile-info h2 {
-            margin: 0 0 6px 0;
-            color: #0f172a;
-            font-size: 1.5rem;
-        }
-        .profile-info p {
-            margin: 0;
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        .skill-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .btn-edit {
-            background: #f59e0b;
-            color: #ffffff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-edit:hover { background: #d97706; }
-        .btn-delete {
-            background: #ef4444;
-            color: #ffffff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-delete:hover { background: #dc2626; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Top Utility Bar -->
-    <div class="top-bar">
-        <a href="add-skill.html" class="btn-contact">Post Skill</a>
-        <a href="#">Categories</a>
-        <a href="#">About Us</a>
-        <a href="profile.html">My Account</a>
-    </div>
-
-    <!-- Main Navigation Bar -->
-    <header class="main-nav">
-        <a href="index.html" class="brand-logo">
-            <i class="fa-solid fa-handshake"></i> SKILLSWAP
-        </a>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="trades.html">My Trades</a></li>
-            <li><a href="add-skill.html">Add Skill</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><a href="#" onclick="logout(event)">Logout</a></li>
+    <nav>
+        <div class="logo"><i class="fa-solid fa-bolt"></i> SKILLSWAP</div>
+        <ul id="navLinks">
+            <!-- Dynamic Nav via app.js -->
         </ul>
-    </header>
+    </nav>
 
-    <main class="container" style="padding: 40px 8%; max-width: 1200px; margin: 0 auto;">
-
-        <h1 style="color: #0f172a; margin-bottom: 1.5rem;">
-            <i class="fa-solid fa-id-card" style="color: #2563eb;"></i> User Profile
-        </h1>
-
-        <!-- User Information Card -->
-        <div class="profile-card">
-            <div class="profile-avatar" id="userAvatar">N</div>
-            <div class="profile-info">
-                <h2 id="userName">Loading Name...</h2>
-                <p><i class="fa-solid fa-envelope" style="margin-right: 6px;"></i><span id="userEmail">Loading Email...</span></p>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="avatar-circle" id="userAvatar">U</div>
+            <div>
+                <h2 id="userName" style="font-size: 1.8rem; color: #fff;">User Name</h2>
+                <p id="userEmail" style="color: #94a3b8; font-size: 0.95rem;">user@example.com</p>
             </div>
         </div>
 
-        <!-- User Listed Skills Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="color: #0f172a; margin: 0;">
-                <i class="fa-solid fa-layer-group" style="color: #2563eb;"></i> My Listed Skills
-            </h2>
-            <a href="add-skill.html" style="background: #2563eb; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                <i class="fa-solid fa-plus"></i> Add New Skill
-            </a>
+        <h3 class="section-title" style="font-size: 1.4rem; margin-bottom: 1.2rem;">
+            <i class="fa-solid fa-list-check"></i> My Shared Skills
+        </h3>
+
+        <div id="mySkillsGrid" class="skills-grid">
+            <!-- User posted skills go here -->
         </div>
+    </div>
 
-        <!-- Skills Container -->
-        <div id="mySkillsContainer" class="skills-grid">
-            <p style="color: #64748b;">Loading your skills...</p>
-        </div>
-
-    </main>
-
+    <script src="js/app.js"></script>
     <script src="js/profile.js"></script>
 </body>
 </html>
