@@ -212,7 +212,7 @@ async function requestSwap(skillId) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ skillId, message })
+              body: JSON.stringify({ skillId, message })
         });
 
         const data = await response.json();
