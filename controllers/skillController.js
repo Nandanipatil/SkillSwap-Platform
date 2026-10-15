@@ -1,88 +1,52 @@
 const Skill = require('../models/Skill');
-const axios = require('axios');
 
-// 1. Get all skills with AI Match Score
-exports.getAllSkills = async (req, res) => {
+// Get All Skills
+exports.getSkills = async (req, res) => {
     try {
-        const skills = await Skill.find().populate('user', 'name email skills');
-        const currentUser = req.user;
-
-        if (currentUser && currentUser.skills && currentUser.skills.length > 0) {
-            const updatedSkills = await Promise.all(skills.map(async (skill) => {
-                const skillObj = skill.toObject();
-                
-                try {
-                    const aiResponse = await axios.post('http://localhost:8000/api/calculate-match', {
-                        user_skills: currentUser.skills,
-                        target_skills: [skill.title, skill.category, skill.description]
-                    });
-
-                    skillObj.matchScore = aiResponse.data.match_score || 0;
-                } catch (aiErr) {
-                    skillObj.matchScore = 0;
-                }
-
-                return skillObj;
-            }));
-
-            return res.json(updatedSkills);
-        }
-
-        res.json(skills);
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error', error: err.message });
+        const skills = await Skill.find().populate('user', 'name email').sort({ createdAt: -1 });
+        res.status(200).json(skills);
+    } catch (error) {
+        console.error('Error fetching skills:', error);
+        res.status(500).json({ message: 'Server error fetching skills' });
     }
 };
 
-// 2. Create Skill
+// Create a New Skill
 exports.createSkill = async (req, res) => {
     try {
         const { title, category, description, imageUrl } = req.body;
+
+        if (!title || !category || !description) {
+            return res.status(400).json({ message: 'Title, category, and description are required.' });
+        }
+
         const newSkill = new Skill({
             title,
             category,
             description,
-            imageUrl,
-            user: req.user.id
+            imageUrl: imageUrl || '',
+            user: req.user.id || req.user._id
         });
 
-        await newSkill.save();
-        res.status(201).json(newSkill);
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error', error: err.message });
+        const savedSkill = await newSkill.save();
+        await savedSkill.populate('user', 'name email');
+
+        res.status(201).json(savedSkill);
+    } catch (error) {
+        console.error('Error creating skill:', error);
+        res.status(500).json({ message: 'Server error creating skill', error: error.message });
     }
 };
 
-// 3. Update Skill
-exports.updateSkill = async (req, res) => {
+// Get Single Skill by ID (Optional/If required in route)
+exports.getSkillById = async (req, res) => {
     try {
-        let skill = await Skill.findById(req.params.id);
-        if (!skill) return res.status(404).json({ message: 'Skill not found' });
-
-        if (skill.user.toString() !== req.user.id) {
-            return res.status(401).json({ message: 'Not authorized' });
+        const skill = await Skill.findById(req.params.id).populate('user', 'name email');
+        if (!skill) {
+            return res.status(404).json({ message: 'Skill not found' });
         }
-
-        skill = await Skill.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-        res.json(skill);
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error', error: err.message });
-    }
-};
-
-// 4. Delete Skill
-exports.deleteSkill = async (req, res) => {
-    try {
-        const skill = await Skill.findById(req.params.id);
-        if (!skill) return res.status(404).json({ message: 'Skill not found' });
-
-        if (skill.user.toString() !== req.user.id) {
-            return res.status(401).json({ message: 'Not authorized' });
-        }
-
-        await Skill.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Skill removed' });
-    } catch (err) {
-        res.status(500).json({ message: 'Server Error', error: err.message });
+        res.status(200).json(skill);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
 };

@@ -1,54 +1,81 @@
-const API_URL = 'http://localhost:5000/api';
-
 document.addEventListener('DOMContentLoaded', () => {
     loadUserProfile();
 });
 
 async function loadUserProfile() {
     const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!token || !user.name) {
+    if (!token) {
+        alert("Aap logged in nahi hain! Please login first.");
         window.location.href = 'login.html';
         return;
     }
 
-    // Set User Details
-    document.getElementById('userName').textContent = user.name;
-    document.getElementById('userEmail').textContent = user.email || 'Student/Developer';
-    document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
-
-    // Fetch Skills Created By Current User
-    try {
-        const res = await fetch(`${API_URL}/skills`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const skills = await res.json();
-
-        const mySkillsGrid = document.getElementById('mySkillsGrid');
-        mySkillsGrid.innerHTML = '';
-
-        const mySkills = skills.filter(s => s.user && (s.user._id === user.id || s.user === user.id));
-
-        if (mySkills.length === 0) {
-            mySkillsGrid.innerHTML = '<p style="color: #64748b; grid-column: 1/-1;">You have not posted any skills yet.</p>';
-            return;
+    const userDataStr = localStorage.getItem('user');
+    if (userDataStr) {
+        try {
+            const user = JSON.parse(userDataStr);
+            document.getElementById('userName').innerText = user.name || user.userName || 'SkillSwap Member';
+            document.getElementById('userEmail').innerText = user.email || 'Registered User';
+        } catch (e) {
+            console.error("Local user data parsing error:", e);
         }
-
-        mySkills.forEach(skill => {
-            const card = document.createElement('div');
-            card.className = 'skill-card';
-            card.innerHTML = `
-                <div class="card-content">
-                    <span class="category-tag"><i class="fa-solid fa-tag"></i> ${skill.category}</span>
-                    <h3 class="card-title">${skill.title}</h3>
-                    <p class="card-description">${skill.description}</p>
-                </div>
-            `;
-            mySkillsGrid.appendChild(card);
-        });
-
-    } catch (err) {
-        console.error('Error loading profile skills:', err);
     }
+
+    // Load User's Skills
+    fetchUserSkills(token);
+}
+
+async function fetchUserSkills(token) {
+    const userSkillsGrid = document.getElementById('userSkillsGrid');
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/skills');
+        const allSkills = await response.json();
+
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const currentUserId = currentUser.id || currentUser._id;
+
+        if (response.ok && Array.isArray(allSkills)) {
+            // Filter skills created by current user
+            const mySkills = allSkills.filter(skill => {
+                if (!skill.user) return false;
+                const skillUserId = typeof skill.user === 'object' ? skill.user._id : skill.user;
+                return skillUserId === currentUserId;
+            });
+
+            document.getElementById('totalSkillsCount').innerText = mySkills.length;
+            renderMySkills(mySkills);
+        } else {
+            userSkillsGrid.innerHTML = '<div class="loading-card">Failed to fetch skills.</div>';
+        }
+    } catch (error) {
+        console.error("Error fetching my skills:", error);
+        userSkillsGrid.innerHTML = '<div class="loading-card">Error loading skills.</div>';
+    }
+}
+
+function renderMySkills(skills) {
+    const userSkillsGrid = document.getElementById('userSkillsGrid');
+    userSkillsGrid.innerHTML = '';
+
+    if (skills.length === 0) {
+        userSkillsGrid.innerHTML = '<div class="loading-card">Aapne abhi tak koi skill add nahi ki hai. Add New par click karein!</div>';
+        return;
+    }
+
+    skills.forEach(skill => {
+        const card = document.createElement('div');
+        card.className = 'skill-card';
+        card.innerHTML = `
+            <div>
+                <span class="skill-badge">${skill.category || 'General'}</span>
+                <h3>${skill.title}</h3>
+                <p>${skill.description}</p>
+            </div>
+            <div class="skill-card-footer">
+                <span style="font-size:0.8rem; color:var(--primary-cyan);">Active Offer</span>
+            </div>
+        `;
+        userSkillsGrid.appendChild(card);
+    });
 }

@@ -1,49 +1,57 @@
-const API_URL = 'http://localhost:5000/api';
+// Global API_URL fallback (Redeclaration SyntaxError se bachne ke liye)
+if (typeof API_URL === 'undefined') {
+    var API_URL = 'http://localhost:5000/api';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Please login first!');
-        window.location.href = 'login.html';
+    const addSkillForm = document.getElementById('addSkillForm');
+
+    if (!addSkillForm) {
+        console.error("Form element 'addSkillForm' HTML me nahi mila!");
         return;
     }
 
-    const form = document.getElementById('addSkillForm');
-    if (form) {
-        form.addEventListener('submit', handleAddSkill);
-    }
-});
+    addSkillForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-async function handleAddSkill(e) {
-    e.preventDefault();
-
-    const title = document.getElementById('skillTitle').value;
-    const category = document.getElementById('skillCategory').value;
-    const description = document.getElementById('skillDescription').value;
-    const imageUrl = document.getElementById('skillImageUrl').value;
-
-    const token = localStorage.getItem('token');
-
-    try {
-        const res = await fetch(`${API_URL}/skills`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ title, category, description, imageUrl })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            alert('Skill added successfully!');
-            window.location.href = 'index.html';
-        } else {
-            alert(data.message || 'Failed to add skill');
+        // 1. LocalStorage se Authentication Token check karein
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert("Aap logged in nahi hain! Kripya pehale Login karein.");
+            window.location.href = 'login.html';
+            return;
         }
-    } catch (err) {
-        console.error(err);
-        alert('Error connecting to backend server.');
-    }
-}
+
+        // 2. Form Values collect karein
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category').value;
+        const description = document.getElementById('description').value.trim();
+        const imageUrlInput = document.getElementById('imageUrl');
+        const imageUrl = imageUrlInput ? imageUrlInput.value.trim() : '';
+
+        // 3. Backend API call
+        try {
+            const response = await fetch(`${API_URL}/skills`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ title, category, description, imageUrl })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Success: Skill Added Successfully!");
+                // Direct homepage par redirect
+                window.location.href = 'index.html';
+            } else {
+                alert("Error: " + (data.message || "Skill add nahi ho saki"));
+            }
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            alert("Server connection failed! Check karein ki backend server running hai ya nahi.");
+        }
+    });
+});

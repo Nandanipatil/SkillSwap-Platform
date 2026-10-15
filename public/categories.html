@@ -4,57 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories - SkillSwap</title>
-    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS Path: Leading slash ensures loading from public/style.css -->
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <nav>
-        <div class="logo"><i class="fa-solid fa-bolt"></i> SKILLSWAP</div>
-        <ul id="navLinks">
-            <!-- Dynamic Nav via app.js -->
-        </ul>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+                <span>SKILL<span class="logo-accent">SWAP</span></span>
+            </a>
+            <ul id="navLinks" class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/categories.html" class="active">Categories</a></li>
+                <li><a href="/trades.html">My Trades</a></li>
+                <li><a href="/add-skill.html">Add Skill</a></li>
+                <li><a href="/profile.html">Profile</a></li>
+                <li><a href="/login.html">Logout</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <div class="categories-container">
-        <div class="category-header">
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="section-header text-center">
             <h1>Explore Skill Categories</h1>
             <p>Browse skill offerings by domain and start swapping</p>
-        </div>
+        </section>
 
         <div class="categories-grid">
-            <a href="index.html?category=Programming" class="category-card">
-                <div class="category-icon"><i class="fa-solid fa-code"></i></div>
+            <div class="category-card">
+                <div class="cat-icon"><i class="fa-solid fa-code"></i></div>
                 <h3>Programming</h3>
                 <p>Web, Python, C++, Mobile Apps</p>
-            </a>
+            </div>
 
-            <a href="index.html?category=Design" class="category-card">
-                <div class="category-icon"><i class="fa-solid fa-pen-nib"></i></div>
+            <div class="category-card">
+                <div class="cat-icon"><i class="fa-solid fa-pen-nib"></i></div>
                 <h3>Design</h3>
                 <p>UI/UX, Graphic Design, 3D Art</p>
-            </a>
+            </div>
 
-            <a href="index.html?category=Language" class="category-card">
-                <div class="category-icon"><i class="fa-solid fa-language"></i></div>
+            <div class="category-card">
+                <div class="cat-icon"><i class="fa-solid fa-language"></i></div>
                 <h3>Language</h3>
                 <p>English, Spanish, Foreign Languages</p>
-            </a>
+            </div>
 
-            <a href="index.html?category=Music" class="category-card">
-                <div class="category-icon"><i class="fa-solid fa-music"></i></div>
+            <div class="category-card">
+                <div class="cat-icon"><i class="fa-solid fa-music"></i></div>
                 <h3>Music</h3>
                 <p>Guitar, Piano, Vocal Training</p>
-            </a>
-
-            <a href="index.html?category=Other" class="category-card">
-                <div class="category-icon"><i class="fa-solid fa-cubes"></i></div>
-                <h3>Other Skills</h3>
-                <p>Business, Marketing, Crafts & More</p>
-            </a>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <script src="js/app.js"></script>
 </body>
 </html>

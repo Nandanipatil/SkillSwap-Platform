@@ -3,54 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Skill - SkillSwap</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Share a New Skill - SkillSwap</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <nav>
-        <div class="logo"><i class="fa-solid fa-bolt"></i> SKILLSWAP</div>
-        <ul id="navLinks">
-            <!-- Dynamic Nav via app.js -->
-        </ul>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <span>SKILL<span class="logo-accent">SWAP</span></span>
+            </a>
+            <ul id="navLinks" class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/categories.html">Categories</a></li>
+                <li><a href="/trades.html">My Trades</a></li>
+                <li><a href="/add-skill.html" class="active">Add Skill</a></li>
+                <li><a href="/profile.html">Profile</a></li>
+                <li><a href="/login.html">Logout</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <div class="form-container">
-        <h2 class="section-title" style="margin-bottom: 1.8rem;"><i class="fa-solid fa-plus-circle"></i> Share a New Skill</h2>
-        
-        <form id="addSkillForm">
-            <div class="form-group">
-                <label for="skillTitle">Skill Title</label>
-                <input type="text" id="skillTitle" class="form-input" placeholder="e.g. Full Stack Web Development, Python Basics..." required>
+    <!-- Main Container -->
+    <main class="main-content">
+        <div class="form-wrapper">
+            <div class="form-header text-center">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-plus"></i> Community Contribution
+                </div>
+                <h1>Share a New Skill</h1>
+                <p>Post your expertise to teach others and earn trade credits.</p>
             </div>
 
-            <div class="form-group">
-                <label for="skillCategory">Category</label>
-                <select id="skillCategory" class="form-select" required>
-                    <option value="Programming">Programming</option>
-                    <option value="Design">Design</option>
-                    <option value="Language">Language</option>
-                    <option value="Music">Music</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+            <!-- Glassmorphic Form Card -->
+            <form id="addSkillForm" class="glass-form">
+                <div class="form-group">
+                    <label for="skillTitle"><i class="fa-solid fa-heading"></i> Skill Title</label>
+                    <input type="text" id="skillTitle" placeholder="e.g., Python Programming, UI/UX Design" required>
+                </div>
 
-            <div class="form-group">
-                <label for="skillDescription">Description</label>
-                <textarea id="skillDescription" class="form-textarea" rows="4" placeholder="Explain what you can teach or share with peers..." required></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="skillCategory"><i class="fa-solid fa-layer-group"></i> Category</label>
+                    <select id="skillCategory" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Design">Design</option>
+                        <option value="Business">Business</option>
+                        <option value="Languages">Languages</option>
+                        <option value="Music">Music</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="skillImageUrl">Image URL (Optional)</label>
-                <input type="url" id="skillImageUrl" class="form-input" placeholder="https://images.unsplash.com/...">
-            </div>
+                <div class="form-group">
+                    <label for="skillDescription"><i class="fa-solid fa-align-left"></i> Description</label>
+                    <textarea id="skillDescription" rows="4" placeholder="Describe what you can teach and your experience level..." required></textarea>
+                </div>
 
-            <button type="submit" class="btn-primary" style="margin-top: 1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Post Skill</button>
-        </form>
-    </div>
+                <div class="form-group">
+                    <label for="skillImageUrl"><i class="fa-solid fa-image"></i> Image URL (Optional)</label>
+                    <input type="url" id="skillImageUrl" placeholder="https://example.com/image.jpg">
+                </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/add-skill.js"></script>
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-paper-plane"></i> Add Skill
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/add_skill.js"></script>
 </body>
 </html>
